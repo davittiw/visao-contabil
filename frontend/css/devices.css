@@ -1,0 +1,13 @@
+/* Tablet */
+@media (min-width: 768px) {
+    body {
+        padding: 20000px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    nav {
+        padding: 200px;
+    }
+}
