@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/global.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="BemVindo-Fundo"></div>
+        <div class="BemVindo-section">
+            <div class="BemVindo-content">
+                <h1 class="BemVindo-title">Bem-Vindo!</h1>
+                <p class="BemVindo-text">A melhor plataforma de gestão de patrimônio: o seu futuro financeiro sob controle</p>
+            </div>
+            <div class="BemVindo-image">
+                <img src="img/pessoa-login.webp" alt="">
+            </div>
+        </div>
+
+        <div class="login-section">
+            <div class="login-box">
+                <div class="login-header">
+                    <div><img class="login-icon" src="img/Logo.png" alt=""></div>
+                    <h2 class="login-title">Login</h2>
+                    <hr class="divider">
+                </div>
+                
+                <form class="login-form">
+                    <label for="email">Seu e-mail</label>
+                    <input class="input-email" type="email" id="email" placeholder="meuemail@email.com" required>
+
+                    <label for="password">Sua senha</label>
+                    <div class="password-container">
+                        <input type="password" id="password" placeholder="1234senha" required>
+                        <span class="password-toggle"></span>
+                    </div>
+
+                    <div class="manter-logado">
+                        <input type="checkbox" id="keep-logged">
+                        <label for="keep-logged" class="txt-manterLogado">Manter-me logado</label>
+                    </div>
+
+                    <p class="txt-cadastra">Ainda não tem uma conta? <a href="cadastro.html" class="signup-link">Cadastrar-se</a>
+                    </p>
+
+                    <button type="submit" class="login-button">Logar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
