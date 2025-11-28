@@ -1,0 +1,72 @@
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const db=require('./bd');
+let clientes = [];
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/', async function(req, res){
+    try {
+        clientes = await db.todosClientes(); 
+        res.status(200).json(clientes);
+    } catch (error) {
+        console.error("Erro ao buscar clientes:", error);
+        res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
+app.post('/clientes', async function(req, res){
+    const novoCliente = req.body; 
+
+    if (!novoCliente || !novoCliente.nome || !novoCliente.cpf || !novoCliente.email || !novoCliente.senha) {
+        return res.status(400).json({ error: "Nome e Idade são obrigatórios." });
+    }
+
+    try {
+        await db.insereCliente(novoCliente);
+        
+        res.status(201).json({ 
+            message: "Cliente inserido com sucesso!", 
+            cliente: novoCliente 
+        });
+    } catch (error) {
+        console.error("Erro ao inserir cliente:", error);
+        res.status(500).json({ error: "Erro interno do servidor ao inserir cliente." });
+    }
+});
+
+app.post('/login', async (req, res) => {
+
+    const { email, senha } = req.body; 
+
+    if (!email || !senha) {
+        return res.status(400).json({ error: "Email e senha são obrigatórios." });
+    }
+
+    try {
+        const usuario = await db.buscaUsuarioPorEmail(email); 
+
+        if (!usuario) {
+            return res.status(401).json({ error: "Credenciais inválidas." });
+        }
+
+        if (usuario.senha_hash === senha) { 
+            return res.status(200).json({ 
+                message: "Login realizado com sucesso!",
+                user: { id: usuario.cd_cpf, nome: usuario.nome, email: usuario.email }
+            });
+        } else {
+            return res.status(401).json({ error: "Credenciais inválidas." });
+        }
+
+    } catch (error) {
+        console.error("Erro no processo de login:", error);
+        return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
+app.listen(8081, () => {
+    console.log('Servidor rodando na porta 8081');
+});

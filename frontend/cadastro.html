@@ -31,9 +31,9 @@
                     <hr class="divider">
                 </div>
 
-                <form class="signup-form">
+                <form class="signup-form" id="Formulario-Cadastro" method="post">
                     <label for="name">Nome Completo</label>
-                    <input class="input-field" type="text" id="name" placeholder="Nome Sobrenome" required>
+                    <input class="input-field" type="text" id="nome" placeholder="Nome Sobrenome" required>
 
                     <label for="cpf">CPF</label>
                     <input class="input-field" type="text" id="cpf" placeholder="000.000.000-00" required>
@@ -43,7 +43,7 @@
 
                     <label for="password">Sua senha</label>
                     <div class="password-container">
-                        <input type="password" id="password" placeholder="Mínimo 8 caracteres" required>
+                        <input type="password" id="senha" placeholder="Mínimo 8 caracteres" required>
                         <span class="password-toggle"></span>
                     </div>
 
@@ -57,5 +57,14 @@
     </div>
 
 </body>
+
+<div id="custom-alert-container">
+    <div id="custom-alert-box">
+        <p id="alert-message"></p>
+        <button id="alert-ok-button">OK</button>
+    </div>
+</div>
+
+<script src="js/cadastro.js"></script>
 
 </html>

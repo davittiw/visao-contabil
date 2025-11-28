@@ -1,0 +1,4 @@
+## Esses arquivos e pastas serão ignorados pelo github ##
+
+node_modules/
+package-lock.json
