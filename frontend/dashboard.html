@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navigation">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <img src="img/Logo.png" class="login-icon" alt="" />
+          <span>Visão Contábil</span>
+        </div>
+
+        <div class="nav-links desktop">
+          <a href="index.html" class="nav-link">Início</a>
+        </div>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="landing.html" class="nav-link">Início</a>
+      </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Dashboard Corporativo</h1>
+        <p class="dashboard-description">
+          Visão geral dos bens, direitos e obrigações da empresa
+        </p>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="card-header-row">
+            <span class="card-label">Total de Bens</span>
+            <i data-lucide="building-2" class="card-icon"></i>
+          </div>
+          <div class="card-value primary" id="totalBens">R$ 0</div>
+          <div class="card-meta" id="bensMeta">0 itens registrados</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="card-header-row">
+            <span class="card-label">Total de Direitos</span>
+            <i data-lucide="trending-up" class="card-icon"></i>
+          </div>
+          <div class="card-value success" id="totalDireitos">R$ 0</div>
+          <div class="card-meta" id="direitosMeta">0 direitos ativos</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="card-header-row">
+            <span class="card-label">Total de Obrigações</span>
+            <i data-lucide="file-text" class="card-icon"></i>
+          </div>
+          <div class="card-value danger" id="totalObrigacoes">R$ 0</div>
+          <div class="card-meta" id="obrigacoesMeta">
+            0 obrigações pendentes
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="card-header-row">
+            <span class="card-label">Patrimônio Líquido</span>
+            <i data-lucide="dollar-sign" class="card-icon"></i>
+          </div>
+          <div class="card-value" id="patrimonioLiquido">R$ 0</div>
+          <div class="card-meta" id="patrimonioMeta">-</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs-container">
+        <div class="tabs-list">
+          <button class="tab-trigger active" data-tab="bens">Bens</button>
+          <button class="tab-trigger" data-tab="direitos">Direitos</button>
+          <button class="tab-trigger" data-tab="obrigacoes">Obrigações</button>
+        </div>
+
+        <!-- Bens Tab -->
+        <div class="tab-content active" id="bens-tab">
+          <div class="tab-header">
+            <h2 class="tab-title">Gestão de Bens</h2>
+            <div class="tab-actions">
+              <div class="search-box">
+                <i data-lucide="search" class="search-icon"></i>
+                <input
+                  type="text"
+                  placeholder="Buscar bens..."
+                  class="search-input"
+                />
+              </div>
+              <button class="btn btn-primary" onclick="abrirModal('Bem')">
+                + Adicionar Bem
+              </button>
+            </div>
+          </div>
+          <div class="items-grid" id="bensGrid"></div>
+        </div>
+
+        <!-- Direitos Tab -->
+        <div class="tab-content" id="direitos-tab">
+          <div class="tab-header">
+            <h2 class="tab-title">Direitos e Créditos</h2>
+            <div class="tab-actions">
+              <div class="search-box">
+                <i data-lucide="search" class="search-icon"></i>
+                <input
+                  type="text"
+                  placeholder="Buscar direitos..."
+                  class="search-input"
+                />
+              </div>
+              <button class="btn btn-primary" onclick="abrirModal('Direito')">
+                + Adicionar Direito
+              </button>
+            </div>
+          </div>
+          <div class="items-grid" id="direitosGrid"></div>
+        </div>
+
+        <!-- Obrigações Tab -->
+        <div class="tab-content" id="obrigacoes-tab">
+          <div class="tab-header">
+            <h2 class="tab-title">Obrigações e Passivos</h2>
+            <div class="tab-actions">
+              <div class="search-box">
+                <i data-lucide="search" class="search-icon"></i>
+                <input
+                  type="text"
+                  placeholder="Buscar obrigações..."
+                  class="search-input"
+                />
+              </div>
+              <button class="btn btn-primary" onclick="abrirModal('Obrigação')">
+                + Adicionar Obrigação
+              </button>
+            </div>
+          </div>
+          <div class="items-grid" id="obrigacoesGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Global -->
+    <div id="modalRegistro" class="modal-overlay">
+      <div class="modal-content">
+        <h2 id="modalTitulo"></h2>
+
+        <div class="modal-form">
+          <label>Título</label>
+          <input type="text" id="inputTitulo" placeholder="Digite o título" />
+
+          <label>Valor</label>
+          <input type="number" id="inputValor" placeholder="0.00" />
+
+          <label>Método de Pagamento</label>
+          <select id="inputMetodoPagamento">
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Pix">Pix</option>
+            <option value="Débito">Débito</option>
+            <option value="Crédito">Crédito</option>
+          </select>
+
+          <label>Tipo</label>
+          <select id="inputTipo">
+            <option value="Ativo">Ativo</option>
+            <option value="Passivo">Passivo</option>
+          </select>
+
+          <div id="campoVencimento" style="display: none">
+            <label for="inputVencimento">Vencimento:</label>
+            <input type="date" id="inputVencimento" />
+          </div>
+
+          <label>Descrição</label>
+          <textarea
+            id="inputDescricao"
+            placeholder="Digite a descrição do registro..."
+          ></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="fecharModal()">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="salvarRegistro()">
+            Salvar
+          </button>
+        </div>
+        ]
+      </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

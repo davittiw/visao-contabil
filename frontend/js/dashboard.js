@@ -1,0 +1,337 @@
+const mockData = {
+  bens: [
+    {
+      id: 1,
+      nome: "Servidor Dell PowerEdge",
+      categoria: "Equipamento TI",
+      valor: 15000,
+      status: "Ativo",
+    },
+    {
+      id: 2,
+      nome: "Veículo Ford Transit",
+      categoria: "Veículo",
+      valor: 85000,
+      status: "Ativo",
+    },
+    {
+      id: 3,
+      nome: "Máquina de Produção XY",
+      categoria: "Equipamento Industrial",
+      valor: 120000,
+      status: "Manutenção",
+    },
+  ],
+  direitos: [
+    {
+      id: 1,
+      descricao: "Conta a Receber - Cliente ABC",
+      valor: 25000,
+      vencimento: "2024-03-15",
+      status: "Pendente",
+    },
+    {
+      id: 2,
+      descricao: "Direitos Autorais Software",
+      valor: 50000,
+      vencimento: "2025-12-31",
+      status: "Ativo",
+    },
+    {
+      id: 3,
+      descricao: "Contrato de Licenciamento",
+      valor: 30000,
+      vencimento: "2024-06-30",
+      status: "Ativo",
+    },
+  ],
+  obrigacoes: [
+    {
+      id: 1,
+      descricao: "Financiamento Equipamentos",
+      valor: 180000,
+      vencimento: "2024-04-20",
+      status: "Pendente",
+    },
+    {
+      id: 2,
+      descricao: "Obrigação Fiscal IRPJ",
+      valor: 45000,
+      vencimento: "2024-03-31",
+      status: "Vencido",
+    },
+    {
+      id: 3,
+      descricao: "Empréstimo Bancário",
+      valor: 250000,
+      vencimento: "2025-01-15",
+      status: "Ativo",
+    },
+  ],
+};
+
+// Format currency
+function formatCurrency(value) {
+  return `R$ ${value.toLocaleString("pt-BR")}`;
+}
+
+// Get badge class
+function getBadgeClass(status) {
+  const statusMap = {
+    Ativo: "badge-default",
+    Pendente: "badge-secondary",
+    Vencido: "badge-destructive",
+    Manutenção: "badge-outline",
+  };
+  return statusMap[status] || "badge-default";
+}
+
+// Update summary
+function updateSummary() {
+  const totalBens = mockData.bens.reduce((sum, item) => sum + item.valor, 0);
+  const totalDireitos = mockData.direitos.reduce(
+    (sum, item) => sum + item.valor,
+    0
+  );
+  const totalObrigacoes = mockData.obrigacoes.reduce(
+    (sum, item) => sum + item.valor,
+    0
+  );
+  const patrimonioLiquido = totalBens + totalDireitos - totalObrigacoes;
+
+  document.getElementById("totalBens").textContent = formatCurrency(totalBens);
+  document.getElementById(
+    "bensMeta"
+  ).textContent = `${mockData.bens.length} itens registrados`;
+
+  document.getElementById("totalDireitos").textContent =
+    formatCurrency(totalDireitos);
+  document.getElementById(
+    "direitosMeta"
+  ).textContent = `${mockData.direitos.length} direitos ativos`;
+
+  document.getElementById("totalObrigacoes").textContent =
+    formatCurrency(totalObrigacoes);
+  document.getElementById(
+    "obrigacoesMeta"
+  ).textContent = `${mockData.obrigacoes.length} obrigações pendentes`;
+
+  const patrimonioEl = document.getElementById("patrimonioLiquido");
+  patrimonioEl.textContent = formatCurrency(patrimonioLiquido);
+  patrimonioEl.className = `card-value ${
+    patrimonioLiquido >= 0 ? "success" : "danger"
+  }`;
+  document.getElementById("patrimonioMeta").textContent =
+    patrimonioLiquido >= 0 ? "Positivo" : "Negativo";
+}
+
+// Render bens
+function renderBens() {
+  const grid = document.getElementById("bensGrid");
+  grid.innerHTML = mockData.bens
+    .map(
+      (bem) => `
+        <div class="item-card">
+            <div class="item-content">
+                <div class="item-info">
+                    <h3>${bem.nome}</h3>
+                    <p>${bem.categoria}</p>
+                    <div class="item-value primary">${formatCurrency(
+                      bem.valor
+                    )}</div>
+                </div>
+                <span class="badge ${getBadgeClass(bem.status)}">${
+        bem.status
+      }</span>
+            </div>
+        </div>
+    `
+    )
+    .join("");
+}
+
+// Render direitos
+function renderDireitos() {
+  const grid = document.getElementById("direitosGrid");
+  grid.innerHTML = mockData.direitos
+    .map((direito) => {
+      const dataVencimento = new Date(direito.vencimento + "T00:00:00"); // Garante que a data seja interpretada como local
+      return `
+        <div class="item-card">
+            <div class="item-content">
+                <div class="item-info">
+                    <h3>${direito.descricao}</h3>                 
+                    <p>Vencimento: ${dataVencimento.toLocaleDateString(
+                      "pt-BR"
+                    )}</p>
+                    <div class="item-value success">${formatCurrency(
+                      direito.valor
+                    )}</div>
+                </div>
+                <span class="badge ${getBadgeClass(direito.status)}">${
+        direito.status
+      }</span>
+            </div>
+        </div>
+    `;
+    })
+    .join("");
+}
+
+// Render obrigações
+function renderObrigacoes() {
+  const grid = document.getElementById("obrigacoesGrid");
+  grid.innerHTML = mockData.obrigacoes
+    .map((obrigacao) => {
+      const dataVencimento = new Date(obrigacao.vencimento + "T00:00:00"); // Garante que a data seja interpretada como local
+      return `
+        <div class="item-card">
+            <div class="item-content">
+                <div class="item-info">
+                    <h3>${obrigacao.descricao}</h3>
+                    <p>Vencimento: ${dataVencimento.toLocaleDateString(
+                      "pt-BR"
+                    )}</p>
+                    <div class="item-value danger">${formatCurrency(
+                      obrigacao.valor
+                    )}</div>
+
+                </div>
+                <span class="badge ${getBadgeClass(obrigacao.status)}">${
+        obrigacao.status
+      }</span>
+            </div>
+        </div>
+    `;
+    })
+    .join("");
+}
+
+let tipoRegistroAtual = "";
+
+function abrirModal(tipo) {
+  tipoRegistroAtual = tipo;
+  document.getElementById("modalTitulo").innerText = `Adicionar ${tipo}`;
+  document.getElementById("modalRegistro").style.display = "block";
+
+  // Limpa campos
+  document.getElementById("inputTitulo").value = "";
+  document.getElementById("inputValor").value = "";
+  document.getElementById("inputDescricao").value = "";
+  document.getElementById("inputMetodoPagamento").value = "";
+  document.getElementById("inputVencimento").value = "";
+
+  // Mostrar vencimento APENAS para Direito e Obrigação
+  if (tipo === "Direito" || tipo === "Obrigação") {
+    document.getElementById("campoVencimento").style.display = "block";
+  } else {
+    document.getElementById("campoVencimento").style.display = "none";
+  }
+
+  // CSS para centralizar o modal
+  const modalOverlay = document.getElementById("modalRegistro");
+  modalOverlay.style.display = "flex";
+  modalOverlay.style.justifyContent = "center";
+  modalOverlay.style.alignItems = "center";
+}
+
+function fecharModal() {
+  document.getElementById("modalRegistro").style.display = "none";
+}
+
+function salvarRegistro() {
+  const titulo = document.getElementById("inputTitulo").value;
+  const valor = parseFloat(document.getElementById("inputValor").value);
+  const descricao = document.getElementById("inputDescricao").value;
+  const tipo = document.getElementById("inputTipo").value;
+  const vencimento = document.getElementById("inputVencimento").value;
+
+  const id = Date.now();
+
+  if (!titulo || !valor) {
+    alert("Preencha título e valor!");
+    return;
+  }
+
+  if (tipoRegistroAtual === "Bem") {
+    mockData.bens.push({
+      id,
+      nome: titulo,
+      categoria: descricao,
+      valor,
+      status: tipo,
+    });
+
+    renderBens();
+  } else if (tipoRegistroAtual === "Direito") {
+    mockData.direitos.push({
+      id,
+      descricao: titulo,
+      valor,
+      vencimento: vencimento || "Não informado",
+      status: tipo,
+    });
+
+    renderDireitos();
+  } else if (tipoRegistroAtual === "Obrigação") {
+    mockData.obrigacoes.push({
+      id,
+      descricao: titulo,
+      valor,
+      vencimento: vencimento || "Não informado",
+      status: tipo,
+    });
+
+    renderObrigacoes();
+  }
+
+  updateSummary();
+  fecharModal();
+}
+
+// Initialize
+document.addEventListener("DOMContentLoaded", function () {
+  lucide.createIcons();
+
+  // Update summary and render tabs
+  updateSummary();
+  renderBens();
+  renderDireitos();
+  renderObrigacoes();
+
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener("click", function () {
+      mobileMenu.classList.toggle("open");
+
+      const icon = mobileMenuBtn.querySelector("i");
+      if (mobileMenu.classList.contains("open")) {
+        icon.setAttribute("data-lucide", "x");
+      } else {
+        icon.setAttribute("data-lucide", "menu");
+      }
+      lucide.createIcons();
+    });
+  }
+
+  // Tab functionality
+  const tabTriggers = document.querySelectorAll(".tab-trigger");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", function () {
+      const tabName = this.getAttribute("data-tab");
+
+      // Remove active class from all triggers and contents
+      tabTriggers.forEach((t) => t.classList.remove("active"));
+      tabContents.forEach((c) => c.classList.remove("active"));
+
+      // Add active class to clicked trigger and corresponding content
+      this.classList.add("active");
+      document.getElementById(`${tabName}-tab`).classList.add("active");
+    });
+  });
+});

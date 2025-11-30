@@ -1,0 +1,45 @@
+TABELAS
+
+cadastro:
+1) email (varchar(50), NOT_NULL)
+2) senha (char(16), NOT_NULL)
+3) nome (varchar(20), NOT_NULL)
+4) telefone(varchar(13), NOT_NULL)
+5) id(int, primary key, auto_increment)
+
+entrada de ativos e passivos:
+1) data e hora(datetime, not_null);
+2) título pro gasto(text, not_null);
+3) valor(int, default 0);
+4) método de pagamento(enum('débito', 'crédito', 'dinheiro', 'pix'));
+5) id do gasto(int, primary key, auto_increment);
+6) tipo(enum('ativo', 'passivo'));
+7) descrição do gasto(varchar(255);
+8) id(int, foreign key (contraist)).
+--------------------------------------------------------------------
+VIEWS
+
+view_cadastro:
+ - mostra todas as informações do cadastro do usuário.
+
+view_entd_psv_atv:
+ - mostra todos os dados que o usuário salvou referente aos seus ativos e passivos.
+
+view_ativos:
+ - mostra todos os ativos (e seus dados) que o usuário salvou (ordenados em data e hora decrescente).
+
+view_passivos:
+ - mostra todos os ativos (e seus dados) que o usuário salvou (ordenados em data e hora decrescente).
+
+view_total_ativos: 
+ - soma total de ativos que o usuário cadastrou (utilizamos a função SUM()).
+
+view_total_passivos:
+ - soma total de passivos que o usuário cadastrou (utilizamos a função SUM()).
+
+view_balanco_geral:
+ - mostra todos os dados que o usuário salvou referente aos seus ativos e passivos, mas ordenados em data e hora decrescente.
+
+view_situacao_patrimonial:
+ - diferença entre a soma de ativos e a de passivos ((SELECT SUM(valor) FROM entd_psv_atv WHERE tipo = 'Ativo') -
+    (SELECT SUM(valor) FROM entd_psv_atv WHERE tipo = 'Passivo')).
