@@ -3,33 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/reset.css"> <!--Reset CSS-->
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/style.css"> <!--Estilos para mobile-->
-    <link rel="stylesheet" href="css/devices.css"> <!--Estilos para outros aparelhos-->
+    <link rel="stylesheet" href="css/index.css"> <!--Estilos para mobile-->
     <title>Visão Contábil | O gerenciador de patrimônio</title>
 </head>
 <body>
-    <!-- Menu Mobile -->
-    <button class="toggle-menu" id="toggleMenu">☰</button>
-
-    <div class="sidebar" id="sidebar">
-        <div class="logo">Visão Contal</div>
-        
-        <ul class="menu-items">
-            <li><a href="#inicio" class="menu-link active">Início</a></li>
-            <li><a href="#precos" class="menu-link">Preços</a></li>
-            <li><a href="#"></a></li>
-        </ul>
-
-        <div class="menu-buttons">
-            <a href="login.html"><button class="btn-entrar">Entrar</button></a>
-            <a href="cadastro.html"><button class="btn-criar">Criar Conta</button></a>
+      <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="img/Logo.png" class="login-icon" alt="">
+                <span>Visão Contábil</span>
+            </div>
+            
+            <div class="nav-actions desktop">
+                <a href="login.html" class="btn btn-ghost">Entrar</a>
+                <a href="cadastro.html" class="btn btn-primary">Criar Conta</a>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i data-lucide="menu"></i>
+            </button>
         </div>
-    </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#inicio" class="nav-link">Início</a>
+            <a href="login.html" class="btn btn-ghost">Entrar</a>
+            <a href="cadastro.html" class="btn btn-primary">Criar Conta</a>
+        </div>
+    </nav>
 
-    <!-- Menu Desktop -->
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="hero-grid">
+                <div class="hero-text animate-fade-in">
+                    <h1 class="hero-title">
+                        Gerencie os <span class="highlight">Ativos Empresariais</span> com Eficiência
+                    </h1>
+                    <p class="hero-description">
+                        Plataforma completa para controle de bens, direitos e obrigações da sua empresa. 
+                        Tenha visibilidade total dos seus recursos corporativos.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="cadastro.html" class="btn btn-secondary btn-lg">Começar Agora</a>
+                        <a href="login.html" class="btn btn-outline btn-lg">Fazer Login</a>
+                    </div>
+                </div>
+                <div class="hero-image animate-slide-up">
+                    <img src="img/build.jpg" alt="Gestão Corporativa">
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <script src="js/script.js"></script>
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-header">
+                <h2 class="section-title">Controle Total dos Recursos Empresariais</h2>
+                <p class="section-description">
+                    Nossa plataforma oferece ferramentas avançadas para gestão completa 
+                    do patrimônio e obrigações da sua empresa.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature Card 1 -->
+                <div class="feature-card">
+                    <div class="card-header">
+                        <i data-lucide="building-2" class="feature-icon"></i>
+                        <h3 class="card-title">Gestão de Bens</h3>
+                        <p class="card-description">
+                            Controle completo de ativos fixos, móveis e imóveis da empresa
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li>• Registro detalhado de ativos</li>
+                            <li>• Controle de depreciação</li>
+                            <li>• Histórico de manutenções</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Feature Card 2 -->
+                <div class="feature-card">
+                    <div class="card-header">
+                        <i data-lucide="trending-up" class="feature-icon"></i>
+                        <h3 class="card-title">Direitos e Créditos</h3>
+                        <p class="card-description">
+                            Acompanhe contas a receber e direitos da empresa
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li>• Contas a receber</li>
+                            <li>• Contratos em vigor</li>
+                            <li>• Direitos autorais</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Feature Card 3 -->
+                <div class="feature-card">
+                    <div class="card-header">
+                        <i data-lucide="file-text" class="feature-icon"></i>
+                        <h3 class="card-title">Obrigações</h3>
+                        <p class="card-description">
+                            Gerencie passivos e compromissos empresariais
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li>• Contas a pagar</li>
+                            <li>• Obrigações fiscais</li>
+                            <li>• Compromissos contratuais</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Feature Card 4 -->
+                <div class="feature-card">
+                    <div class="card-header">
+                        <i data-lucide="bar-chart-3" class="feature-icon"></i>
+                        <h3 class="card-title">Relatórios Avançados</h3>
+                        <p class="card-description">
+                            Análises detalhadas e insights estratégicos
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li>• Dashboards interativos</li>
+                            <li>• Relatórios personalizados</li>
+                            <li>• Análise de tendências</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Feature Card 5 -->
+                <div class="feature-card">
+                    <div class="card-header">
+                        <i data-lucide="shield" class="feature-icon"></i>
+                        <h3 class="card-title">Segurança</h3>
+                        <p class="card-description">
+                            Proteção máxima para dados sensíveis
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li>• Criptografia avançada</li>
+                            <li>• Controle de acesso</li>
+                            <li>• Backup automático</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Feature Card 6 -->
+                <div class="feature-card">
+                    <div class="card-header">
+                        <i data-lucide="users" class="feature-icon"></i>
+                        <h3 class="card-title">Colaboração</h3>
+                        <p class="card-description">
+                            Trabalho em equipe eficiente e organizado
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li>• Permissões por usuário</li>
+                            <li>• Fluxos de aprovação</li>
+                            <li>• Auditoria de ações</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container cta-content">
+            <h2 class="cta-title">Pronto para Revolucionar sua Gestão Empresarial?</h2>
+            <p class="cta-description">
+                Junte-se a centenas de empresas que já modernizaram 
+                sua gestão de ativos com nossa plataforma.
+            </p>
+            <a href="cadastro.html" class="btn btn-secondary btn-lg">Criar Conta Grátis</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="img/Logo.png" class="login-icon" alt="">
+                <span>Visão Contábil</span>
+            </div>
+            <p class="footer-text">© 2025 Visão Contábil. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="landing.js"></script>
 </body>
 </html>
