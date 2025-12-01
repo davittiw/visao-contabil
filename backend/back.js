@@ -55,7 +55,7 @@ app.post('/login', async (req, res) => {
         if (usuario.senha === senha) { 
             return res.status(200).json({ 
                 message: "Login realizado com sucesso!",
-                user: { id: usuario.id, nome: usuario.nome, email: usuario.email }
+                user: { id: usuario.usuario_id, nome: usuario.nome, email: usuario.email }
             });
         } else {
             return res.status(401).json({ error: "Credenciais inválidas." });

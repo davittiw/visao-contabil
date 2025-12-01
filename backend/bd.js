@@ -8,7 +8,7 @@ const conectar = async () => {
       port: 46509,
       user: "root",
       password: "AGwNtryZDNHSIVfwilcAXGpcOEirqgJL",
-      database: "railway",
+      database: "visaocontabil",
     });
     global.conexao = con;
     return con;
@@ -22,11 +22,11 @@ const conectar = async () => {
 
 const insereCliente = async (cliente)=>{
     const con = await conectar()
-    const sql = 'INSERT INTO cadastro (nome, email, senha, telefone) VALUES (?, ?, ?, ?);'
+    const sql = 'INSERT INTO cadastro (email, senha, nome, telefone) VALUES (?, ?, ?, ?);'
     const valores = [
-        cliente.nome, 
         cliente.email, 
-        cliente.senha,
+        cliente.senha, 
+        cliente.nome,
         cliente.telefone
     ];
     await con.query(sql,valores)
@@ -34,7 +34,7 @@ const insereCliente = async (cliente)=>{
 
 const buscaUsuarioPorEmail = async (email) => {
     const con = await conectar();
-    const sql = 'SELECT id, nome, email, senha, telefone FROM cadastro WHERE email = ?';
+    const sql = 'SELECT usuario_id, email, senha, nome, telefone FROM cadastro WHERE email = ?';
     const [linhas] = await con.query(sql, [email]);
     return linhas[0]; 
 };
@@ -63,19 +63,19 @@ const queryBens = async (userId) => {
 
     const sql = `
         SELECT
-            id_do_gasto AS id,
-            titulo_gasto AS nome,
-            descricao_gasto AS categoria,
+            gasto_id AS id,
+            titulo AS nome,
+            descricao AS categoria,
             valor,
             -- Simula o campo status (Se Manutenção for uma regra de negócio que você deve aplicar)
             CASE
-                WHEN descricao_gasto LIKE '%Manutenção%' THEN 'Manutenção'
+                WHEN descricao LIKE '%Manutenção%' THEN 'Manutenção'
                 ELSE 'Ativo'
             END AS status 
         FROM
             entd_psv_atv
         WHERE
-            id_usuario = ?
+            usuario_id = ?
             AND tipo = 'ativo'
             AND tipo_ativo = 'bens'
         ORDER BY
@@ -91,19 +91,19 @@ const queryDireitos = async (userId) => {
 
     const sql = `
         SELECT
-            id_do_gasto AS id,
-            titulo_gasto AS descricao,
+            gasto_id AS id,
+            titulo AS descricao,
             valor,
-            DATE_FORMAT(data_e_hora, '%Y-%m-%d') AS vencimento,
+            DATE_FORMAT(data_hora, '%Y-%m-%d') AS vencimento,
             'Ativo' AS status
         FROM
             entd_psv_atv
         WHERE
-            id_usuario = ? 
+            usuario_id = ? 
             AND tipo = 'ativo'
             AND tipo_ativo = 'direitos' 
         ORDER BY
-            data_e_hora ASC;
+            data_hora ASC;
     `;
 
     const [linhas] = await con.query(sql, [userId]);
@@ -115,15 +115,15 @@ const queryObrigacoes = async (userId) => {
 
     const sql = `
         SELECT
-            id_do_gasto AS id,
-            titulo_gasto AS descricao,
+            gasto_id AS id,
+            titulo AS descricao,
             valor,
-            DATE_FORMAT(data_e_hora, '%Y-%m-%d') AS vencimento,
+            DATE_FORMAT(data_hora, '%Y-%m-%d') AS vencimento,
             'Pendente' AS status       
         FROM
             entd_psv_atv
         WHERE
-            id_usuario = ? 
+            usuario_id = ? 
             AND tipo_ativo = 'obrigacoes'
         ORDER BY
             valor DESC;
@@ -138,13 +138,13 @@ const insereAtivoOuPassivo = async (dados) => {
     
     const sql = `
         INSERT INTO entd_psv_atv (
-            data_e_hora, 
-            titulo_gasto, 
+            usuario_id,
+            data_hora, 
+            titulo, 
             valor, 
-            metodo_pagamento, 
+            pagamento, 
             tipo, 
-            descricao_gasto, 
-            id_usuario,
+            descricao, 
             tipo_ativo 
         ) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -153,13 +153,13 @@ const insereAtivoOuPassivo = async (dados) => {
     let valores = [];
 
     valores = [
+        dados.id,
         dados.data,
         dados.nome, 
         dados.valor, 
         dados.pagamento,
         dados.status,
         dados.descricao, 
-        dados.id,
         dados.tipoRegistro
     ];
     
