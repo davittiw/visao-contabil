@@ -96,18 +96,18 @@ body {
 .signup-button {
     width: 100%;
     padding: 12px;
-    background: #1a73e8;
-    border: none;
-    border-radius: 6px;
+    background: #155ec0;
     color: #fff;
-    font-size: 15px;
-    cursor: pointer;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 15px;
     transition: 0.2s;
-    margin-top: 5px;
 }
 
 .signup-button:hover {
-    background: #155ec0;
+    background: var(--primary-light);
+    cursor: pointer;
 }
 
 /* Texto: já tem conta? */

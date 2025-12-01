@@ -1,7 +1,6 @@
 *{
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 :root{
@@ -18,19 +17,19 @@ body{
     align-items: center;
     height: 100vh;
     background: #f2f4f7;
-    font-family: Arial, sans-serif;
 }
 
 .container{
     background-color: white;
-    height: 550px;
-    width: 600px;
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    width: 100%;
+    max-width: 420px;
+    padding: 35px 40px;
+    border-radius: 12px;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* ---- SEÇÃO DE LOGIN ---- */
@@ -43,7 +42,7 @@ body{
 }
 
 .login-box{
-    width: 75%;
+    width: 100%;
     height: auto;
     padding: 30px 20px;
     border-radius: var(--radius);
@@ -88,7 +87,6 @@ body{
 .login-form label{
     margin-bottom: 5px;
     font-size: 14px;
-    font-weight: bold;
 }
 
 .input-email,
@@ -138,9 +136,10 @@ body{
 }
 
 .signup-link{
-    color: var(--primary);
     font-weight: bold;
     text-decoration: none;
+    color: #1a73e8;
+
 }
 
 .signup-link:hover{
@@ -151,8 +150,8 @@ body{
 
 .login-button{
     width: 100%;
-    padding: 10px;
-    background: var(--primary);
+    padding: 12px;
+    background: #155ec0;
     color: white;
     font-size: 16px;
     border-radius: 6px;
