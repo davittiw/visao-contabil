@@ -3,7 +3,13 @@ const conectar = async () => {
         return global.conexao;
 
     const mysql = require('mysql2/promise');
-    const con = mysql.createConnection("mysql://root:marcolimaoJNRA121@localhost:3306/patrimonio_db");
+    const con = mysql.createConnection({
+      host: "turntable.proxy.rlwy.net",
+      port: 46509,
+      user: "root",
+      password: "AGwNtryZDNHSIVfwilcAXGpcOEirqgJL",
+      database: "railway",
+    });
     global.conexao = con;
     return con;
 }

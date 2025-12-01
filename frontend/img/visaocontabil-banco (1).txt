@@ -1,3 +1,7 @@
+BANCO DE DADOS
+
+visaocontabil
+
 TABELAS
 
 cadastro:
@@ -5,17 +9,18 @@ cadastro:
 2) senha (char(16), NOT_NULL)
 3) nome (varchar(20), NOT_NULL)
 4) telefone(varchar(13), NOT_NULL)
-5) id(int, primary key, auto_increment)
+5) usuario_id(int, primary key, auto_increment)
 
 entrada de ativos e passivos:
-1) data e hora(datetime, not_null);
-2) título pro gasto(text, not_null);
+1) data_hora(datetime, not_null);
+2) titulo(text, not_null);
 3) valor(int, default 0);
-4) método de pagamento(enum('débito', 'crédito', 'dinheiro', 'pix'));
-5) id do gasto(int, primary key, auto_increment);
+4) pagamento(enum('débito', 'crédito', 'dinheiro', 'pix'));
+5) gasto_id(int, primary key, auto_increment);
 6) tipo(enum('ativo', 'passivo'));
-7) descrição do gasto(varchar(255);
-8) id(int, foreign key (contraist)).
+7) descricao(varchar(255);
+8) usuario_id(int, foreign key (contraist));
+9) tipo ativo(enum('bens', 'direitos', 'obrigacoes').
 --------------------------------------------------------------------
 VIEWS
 
