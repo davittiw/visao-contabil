@@ -1,28 +1,26 @@
 let mockData = {};
-const userId = localStorage.getItem('usuarioId');
+const userId = localStorage.getItem("usuarioId");
 
 if (!userId) {
-    alert('Sessão expirada. Faça login novamente.');
-    window.location.href = "login.html";
+  alert("Sessão expirada. Faça login novamente.");
+  window.location.href = "login.html";
 }
 
 async function BuscarDados() {
-
   const API_URL_DADOS = `http://localhost:8081/BuscarDados/${userId}`;
 
   try {
-      const response = await fetch(API_URL_DADOS);
-      mockData = await response.json();
+    const response = await fetch(API_URL_DADOS);
+    mockData = await response.json();
 
-      // Update summary and render tabs
+    // Update summary and render tabs
 
-      filtrarErenderizarDireitos('');
-      filtrarErenderizarBens('');
-      filtrarErenderizarObrigacoes('');
-      updateSummary();
-  } 
-  catch (error) {
-      console.error("Erro ao buscar os dados:", error);
+    filtrarErenderizarDireitos("");
+    filtrarErenderizarBens("");
+    filtrarErenderizarObrigacoes("");
+    updateSummary();
+  } catch (error) {
+    console.error("Erro ao buscar os dados:", error);
   }
 }
 
@@ -172,9 +170,13 @@ function renderBens(dadosCompletos) {
                       bem.valor
                     )}</div>
                 </div>
-                <span class="badge ${getBadgeClass(bem.status)}">${
-        bem.status
-      }</span>
+                <div class="item-ser">
+                  <span class="badge ${getBadgeClass(bem.status)}">
+                    ${bem.status}
+                  </span>
+
+                  <span class="material-icons delete-icon">delete</span>
+                <div/>
             </div>
         </div>
     `
@@ -200,9 +202,13 @@ function renderDireitos(dadosCompletos) {
                       direito.valor
                     )}</div>
                 </div>
-                <span class="badge ${getBadgeClass(direito.status)}">${
-        direito.status
-      }</span>
+                <div class="item-ser">
+                  <span class="badge ${getBadgeClass(direito.status)}">
+                    ${direito.status}
+                  </span>
+
+                  <span class="material-icons delete-icon">delete</span>
+                <div/>
             </div>
         </div>
     `;
@@ -229,9 +235,13 @@ function renderObrigacoes(dadosCompletos) {
                     )}</div>
 
                 </div>
-                <span class="badge ${getBadgeClass(obrigacao.status)}">${
-        obrigacao.status
-      }</span>
+                <div class="item-ser">
+                  <span class="badge ${getBadgeClass(obrigacao.status)}">
+                    ${obrigacao.status}
+                  </span>
+
+                  <span class="material-icons delete-icon">delete</span>
+                <div/>
             </div>
         </div>
     `;
@@ -299,11 +309,10 @@ async function salvarRegistro() {
       status: tipo,
       pagamento: metodoPagamento,
       data: dataCorrigida,
-      tipoRegistro: 'bens'
+      tipoRegistro: "bens",
     };
     await enviarAtualizacao(dadosSalvar);
-    filtrarErenderizarBens('');
-
+    filtrarErenderizarBens("");
   } else if (tipoRegistroAtual === "Direito") {
     dadosSalvar = {
       id: userId,
@@ -313,11 +322,10 @@ async function salvarRegistro() {
       status: tipo,
       pagamento: metodoPagamento,
       data: vencimento || "Não informado",
-      tipoRegistro: 'direitos'
+      tipoRegistro: "direitos",
     };
     await enviarAtualizacao(dadosSalvar);
-    filtrarErenderizarDireitos('');
-
+    filtrarErenderizarDireitos("");
   } else if (tipoRegistroAtual === "Obrigação") {
     dadosSalvar = {
       id: userId,
@@ -327,27 +335,26 @@ async function salvarRegistro() {
       status: tipo,
       pagamento: metodoPagamento,
       data: vencimento || "Não informado",
-      tipoRegistro: 'obrigacoes'
+      tipoRegistro: "obrigacoes",
     };
     await enviarAtualizacao(dadosSalvar);
-    filtrarErenderizarObrigacoes('');
+    filtrarErenderizarObrigacoes("");
   }
 
   fecharModal();
   updateSummary();
 }
 
-async function enviarAtualizacao(dadosSalvar)
-{
-  const API_URL_SALVAR = 'http://localhost:8081/transacao';
+async function enviarAtualizacao(dadosSalvar) {
+  const API_URL_SALVAR = "http://localhost:8081/transacao";
 
   try {
     const response = await fetch(API_URL_SALVAR, {
-        method: 'POST', 
-        headers: {
-            'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify(dadosSalvar) 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dadosSalvar),
     });
 
     const result = await response.json();
@@ -359,80 +366,82 @@ async function enviarAtualizacao(dadosSalvar)
       alert(`Falha no cadastro de ativos ou passivos: ${result.error}`);
     }
   } catch (error) {
-      console.error("Erro na requisição POST de atualizar passivos e ativos:", error);
-      alert("Erro de conexão com o servidor. Tente novamente.");
-  } 
+    console.error(
+      "Erro na requisição POST de atualizar passivos e ativos:",
+      error
+    );
+    alert("Erro de conexão com o servidor. Tente novamente.");
+  }
 }
 
 function formatarDataParaMySQL(dataObj) {
-    const isoString = dataObj.toISOString();
-    const mysqlDateTime = isoString.slice(0, 19).replace('T', ' ');
-    return mysqlDateTime;
+  const isoString = dataObj.toISOString();
+  const mysqlDateTime = isoString.slice(0, 19).replace("T", " ");
+  return mysqlDateTime;
 }
 
-const campoBuscaDireitos = document.getElementById('campo-busca-direitos'); 
-const campoBuscaBens = document.getElementById('campo-busca-bens'); 
-const campoBuscaObrigacoes = document.getElementById('campo-busca-obrigacoes'); 
+const campoBuscaDireitos = document.getElementById("campo-busca-direitos");
+const campoBuscaBens = document.getElementById("campo-busca-bens");
+const campoBuscaObrigacoes = document.getElementById("campo-busca-obrigacoes");
 
-campoBuscaDireitos.addEventListener('keyup', (event) => {
-    const termo = event.target.value.toLowerCase();
-    filtrarErenderizarDireitos(termo); 
+campoBuscaDireitos.addEventListener("keyup", (event) => {
+  const termo = event.target.value.toLowerCase();
+  filtrarErenderizarDireitos(termo);
 });
 
-campoBuscaBens.addEventListener('keyup', (event) => {
-    const termo = event.target.value.toLowerCase();
-    filtrarErenderizarBens(termo); 
+campoBuscaBens.addEventListener("keyup", (event) => {
+  const termo = event.target.value.toLowerCase();
+  filtrarErenderizarBens(termo);
 });
 
-campoBuscaObrigacoes.addEventListener('keyup', (event) => {
-    const termo = event.target.value.toLowerCase();
-    filtrarErenderizarObrigacoes(termo); 
+campoBuscaObrigacoes.addEventListener("keyup", (event) => {
+  const termo = event.target.value.toLowerCase();
+  filtrarErenderizarObrigacoes(termo);
 });
-
 
 function filtrarErenderizarDireitos(termoDeBusca) {
-    const dadosCompletos = mockData.direitos; 
-    
-    if (!termoDeBusca) {
-        // Se o campo de busca estiver vazio, renderiza todos os dados
-        return renderDireitos(dadosCompletos);
-    }
+  const dadosCompletos = mockData.direitos;
 
-    const resultadosFiltrados = dadosCompletos.filter(item => {
-        return item.descricao.toLowerCase().startsWith(termoDeBusca);
-    });
+  if (!termoDeBusca) {
+    // Se o campo de busca estiver vazio, renderiza todos os dados
+    return renderDireitos(dadosCompletos);
+  }
 
-    renderDireitos(resultadosFiltrados);
+  const resultadosFiltrados = dadosCompletos.filter((item) => {
+    return item.descricao.toLowerCase().startsWith(termoDeBusca);
+  });
+
+  renderDireitos(resultadosFiltrados);
 }
 
 function filtrarErenderizarBens(termoDeBusca) {
-    const dadosCompletos = mockData.bens; 
-    
-    if (!termoDeBusca) {
-        // Se o campo de busca estiver vazio, renderiza todos os dados
-        return renderBens(dadosCompletos);
-    }
+  const dadosCompletos = mockData.bens;
 
-    const resultadosFiltrados = dadosCompletos.filter(item => {
-        return item.nome.toLowerCase().startsWith(termoDeBusca);
-    });
+  if (!termoDeBusca) {
+    // Se o campo de busca estiver vazio, renderiza todos os dados
+    return renderBens(dadosCompletos);
+  }
 
-    renderBens(resultadosFiltrados);
+  const resultadosFiltrados = dadosCompletos.filter((item) => {
+    return item.nome.toLowerCase().startsWith(termoDeBusca);
+  });
+
+  renderBens(resultadosFiltrados);
 }
 
 function filtrarErenderizarObrigacoes(termoDeBusca) {
-    const dadosCompletos = mockData.obrigacoes; 
-    
-    if (!termoDeBusca) {
-        // Se o campo de busca estiver vazio, renderiza todos os dados
-        return renderObrigacoes(dadosCompletos);
-    }
+  const dadosCompletos = mockData.obrigacoes;
 
-    const resultadosFiltrados = dadosCompletos.filter(item => {
-        return item.descricao.toLowerCase().startsWith(termoDeBusca);
-    });
+  if (!termoDeBusca) {
+    // Se o campo de busca estiver vazio, renderiza todos os dados
+    return renderObrigacoes(dadosCompletos);
+  }
 
-    renderObrigacoes(resultadosFiltrados);
+  const resultadosFiltrados = dadosCompletos.filter((item) => {
+    return item.descricao.toLowerCase().startsWith(termoDeBusca);
+  });
+
+  renderObrigacoes(resultadosFiltrados);
 }
 
 // Initialize

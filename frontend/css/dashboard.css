@@ -329,7 +329,7 @@ body {
 .item-content {
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .item-info h3 {
@@ -355,6 +355,23 @@ body {
 
 .item-value.danger {
     color: red;
+}
+
+.item-ser {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.delete-icon {
+    color: red;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.delete-icon:hover {
+    color: gray;
 }
 
 .badge {
