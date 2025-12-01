@@ -26,6 +26,8 @@ async function handleLoginSubmit(event) {
         const result = await response.json();
 
         if (response.ok) {
+            const userId = result.user.id;
+            localStorage.setItem('usuarioId', userId);
             alert(`Bem-vindo, ${result.user.nome}! Login realizado.`);
             window.location.href = "dashboard.html";
         } else {
