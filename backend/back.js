@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const db=require('./bd');
+const db = require('./bd');
 let clientes = [];
 
 app.use(cors());
@@ -17,10 +17,10 @@ app.get('/', async function(req, res){
     }
 });
 
-app.post('/clientes', async function(req, res){
+app.post('/cadastro', async function(req, res){
     const novoCliente = req.body; 
 
-    if (!novoCliente || !novoCliente.nome || !novoCliente.cpf || !novoCliente.email || !novoCliente.senha) {
+    if (!novoCliente || !novoCliente.nome || !novoCliente.telefone || !novoCliente.email || !novoCliente.senha) {
         return res.status(400).json({ error: "Nome e Idade são obrigatórios." });
     }
 
@@ -52,10 +52,10 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: "Credenciais inválidas." });
         }
 
-        if (usuario.senha_hash === senha) { 
+        if (usuario.senha === senha) { 
             return res.status(200).json({ 
                 message: "Login realizado com sucesso!",
-                user: { id: usuario.cd_cpf, nome: usuario.nome, email: usuario.email }
+                user: { id: usuario.id, nome: usuario.nome, email: usuario.email }
             });
         } else {
             return res.status(401).json({ error: "Credenciais inválidas." });
@@ -64,6 +64,58 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         console.error("Erro no processo de login:", error);
         return res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
+app.get('/BuscarDados/:userId', async (req, res) => {
+
+    const userId = req.params.userId;
+
+    if (!userId) {
+        return res.status(400).json({ error: "ID do usuário não fornecido." });
+    }
+
+    try {
+        const dadosPatrimonio = await db.getDadosCompletosPatrimonio(userId); 
+        
+        if (dadosPatrimonio) {
+            res.status(200).json(dadosPatrimonio);
+        } else {
+            res.status(404).json({ message: "Nenhum dado encontrado para este usuário." });
+        }
+
+    } catch (error) {
+        console.error(`Erro ao buscar dados para o usuário ${userId}:`, error);
+        res.status(500).json({ error: "Erro interno do servidor ao processar a solicitação." });
+    }
+});
+
+app.post('/transacao', async (req, res) => {
+    const dadosTransacao = req.body; 
+
+    if (!dadosTransacao.nome || !dadosTransacao.valor || !dadosTransacao.status || !dadosTransacao.id) {
+        return res.status(400).json({ error: "Título, valor, tipo e ID do usuário são obrigatórios." });
+    }
+
+    if (dadosTransacao.status !== 'Ativo' && dadosTransacao.status !== 'Passivo') {
+        return res.status(400).json({ error: "O tipo deve ser 'ativo' ou 'passivo'." });
+    }
+    
+    if (!dadosTransacao.vencimento) {
+        dadosTransacao.vencimento = new Date();
+    }
+
+    try {
+        await db.insereAtivoOuPassivo(dadosTransacao);
+        
+        res.status(201).json({ 
+            message: `${dadosTransacao.status} cadastrado com sucesso!`, 
+            transacao: dadosTransacao 
+        });
+
+    } catch (error) {
+        console.error("Erro ao inserir transação:", error);
+        res.status(500).json({ error: "Erro interno ao salvar transação." });
     }
 });
 

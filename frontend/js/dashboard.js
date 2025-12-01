@@ -1,3 +1,34 @@
+let mockData = {};
+const userId = localStorage.getItem('usuarioId');
+
+if (!userId) {
+    alert('Sessão expirada. Faça login novamente.');
+    window.location.href = "login.html";
+}
+
+async function BuscarDados() {
+
+  const API_URL_DADOS = `http://localhost:8081/BuscarDados/${userId}`;
+
+  try {
+      const response = await fetch(API_URL_DADOS);
+      mockData = await response.json();
+
+      // Update summary and render tabs
+
+      filtrarErenderizarDireitos('');
+      filtrarErenderizarBens('');
+      filtrarErenderizarObrigacoes('');
+      updateSummary();
+  } 
+  catch (error) {
+      console.error("Erro ao buscar os dados:", error);
+  }
+}
+
+BuscarDados();
+
+/*
 const mockData = {
   bens: [
     {
@@ -69,6 +100,7 @@ const mockData = {
     },
   ],
 };
+*/
 
 // Format currency
 function formatCurrency(value) {
@@ -126,9 +158,9 @@ function updateSummary() {
 }
 
 // Render bens
-function renderBens() {
+function renderBens(dadosCompletos) {
   const grid = document.getElementById("bensGrid");
-  grid.innerHTML = mockData.bens
+  grid.innerHTML = dadosCompletos
     .map(
       (bem) => `
         <div class="item-card">
@@ -151,9 +183,9 @@ function renderBens() {
 }
 
 // Render direitos
-function renderDireitos() {
+function renderDireitos(dadosCompletos) {
   const grid = document.getElementById("direitosGrid");
-  grid.innerHTML = mockData.direitos
+  grid.innerHTML = dadosCompletos
     .map((direito) => {
       const dataVencimento = new Date(direito.vencimento + "T00:00:00"); // Garante que a data seja interpretada como local
       return `
@@ -179,9 +211,9 @@ function renderDireitos() {
 }
 
 // Render obrigações
-function renderObrigacoes() {
+function renderObrigacoes(dadosCompletos) {
   const grid = document.getElementById("obrigacoesGrid");
-  grid.innerHTML = mockData.obrigacoes
+  grid.innerHTML = dadosCompletos
     .map((obrigacao) => {
       const dataVencimento = new Date(obrigacao.vencimento + "T00:00:00"); // Garante que a data seja interpretada como local
       return `
@@ -239,65 +271,173 @@ function fecharModal() {
   document.getElementById("modalRegistro").style.display = "none";
 }
 
-function salvarRegistro() {
+async function salvarRegistro() {
   const titulo = document.getElementById("inputTitulo").value;
   const valor = parseFloat(document.getElementById("inputValor").value);
   const descricao = document.getElementById("inputDescricao").value;
   const tipo = document.getElementById("inputTipo").value;
   const vencimento = document.getElementById("inputVencimento").value;
+  const metodoPagamento = document.getElementById("inputMetodoPagamento").value;
 
-  const id = Date.now();
+  //const id = Date.now();
 
   if (!titulo || !valor) {
     alert("Preencha título e valor!");
     return;
   }
 
+  let dadosSalvar = {};
+  let dataAtual = new Date();
+  let dataCorrigida = formatarDataParaMySQL(dataAtual);
+
   if (tipoRegistroAtual === "Bem") {
-    mockData.bens.push({
-      id,
+    dadosSalvar = {
+      id: userId,
       nome: titulo,
-      categoria: descricao,
+      descricao: descricao,
       valor,
       status: tipo,
-    });
+      pagamento: metodoPagamento,
+      data: dataCorrigida,
+      tipoRegistro: 'bens'
+    };
+    await enviarAtualizacao(dadosSalvar);
+    filtrarErenderizarBens('');
 
-    renderBens();
   } else if (tipoRegistroAtual === "Direito") {
-    mockData.direitos.push({
-      id,
-      descricao: titulo,
+    dadosSalvar = {
+      id: userId,
+      nome: titulo,
+      descricao: descricao,
       valor,
-      vencimento: vencimento || "Não informado",
       status: tipo,
-    });
+      pagamento: metodoPagamento,
+      data: vencimento || "Não informado",
+      tipoRegistro: 'direitos'
+    };
+    await enviarAtualizacao(dadosSalvar);
+    filtrarErenderizarDireitos('');
 
-    renderDireitos();
   } else if (tipoRegistroAtual === "Obrigação") {
-    mockData.obrigacoes.push({
-      id,
-      descricao: titulo,
+    dadosSalvar = {
+      id: userId,
+      nome: titulo,
+      descricao: descricao,
       valor,
-      vencimento: vencimento || "Não informado",
       status: tipo,
-    });
-
-    renderObrigacoes();
+      pagamento: metodoPagamento,
+      data: vencimento || "Não informado",
+      tipoRegistro: 'obrigacoes'
+    };
+    await enviarAtualizacao(dadosSalvar);
+    filtrarErenderizarObrigacoes('');
   }
 
-  updateSummary();
   fecharModal();
+  updateSummary();
+}
+
+async function enviarAtualizacao(dadosSalvar)
+{
+  const API_URL_SALVAR = 'http://localhost:8081/transacao';
+
+  try {
+    const response = await fetch(API_URL_SALVAR, {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(dadosSalvar) 
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      await BuscarDados();
+      //alert(`Bem-vindo, ${result.user.nome}! Login realizado.`);
+    } else {
+      alert(`Falha no cadastro de ativos ou passivos: ${result.error}`);
+    }
+  } catch (error) {
+      console.error("Erro na requisição POST de atualizar passivos e ativos:", error);
+      alert("Erro de conexão com o servidor. Tente novamente.");
+  } 
+}
+
+function formatarDataParaMySQL(dataObj) {
+    const isoString = dataObj.toISOString();
+    const mysqlDateTime = isoString.slice(0, 19).replace('T', ' ');
+    return mysqlDateTime;
+}
+
+const campoBuscaDireitos = document.getElementById('campo-busca-direitos'); 
+const campoBuscaBens = document.getElementById('campo-busca-bens'); 
+const campoBuscaObrigacoes = document.getElementById('campo-busca-obrigacoes'); 
+
+campoBuscaDireitos.addEventListener('keyup', (event) => {
+    const termo = event.target.value.toLowerCase();
+    filtrarErenderizarDireitos(termo); 
+});
+
+campoBuscaBens.addEventListener('keyup', (event) => {
+    const termo = event.target.value.toLowerCase();
+    filtrarErenderizarBens(termo); 
+});
+
+campoBuscaObrigacoes.addEventListener('keyup', (event) => {
+    const termo = event.target.value.toLowerCase();
+    filtrarErenderizarObrigacoes(termo); 
+});
+
+
+function filtrarErenderizarDireitos(termoDeBusca) {
+    const dadosCompletos = mockData.direitos; 
+    
+    if (!termoDeBusca) {
+        // Se o campo de busca estiver vazio, renderiza todos os dados
+        return renderDireitos(dadosCompletos);
+    }
+
+    const resultadosFiltrados = dadosCompletos.filter(item => {
+        return item.descricao.toLowerCase().startsWith(termoDeBusca);
+    });
+
+    renderDireitos(resultadosFiltrados);
+}
+
+function filtrarErenderizarBens(termoDeBusca) {
+    const dadosCompletos = mockData.bens; 
+    
+    if (!termoDeBusca) {
+        // Se o campo de busca estiver vazio, renderiza todos os dados
+        return renderBens(dadosCompletos);
+    }
+
+    const resultadosFiltrados = dadosCompletos.filter(item => {
+        return item.nome.toLowerCase().startsWith(termoDeBusca);
+    });
+
+    renderBens(resultadosFiltrados);
+}
+
+function filtrarErenderizarObrigacoes(termoDeBusca) {
+    const dadosCompletos = mockData.obrigacoes; 
+    
+    if (!termoDeBusca) {
+        // Se o campo de busca estiver vazio, renderiza todos os dados
+        return renderObrigacoes(dadosCompletos);
+    }
+
+    const resultadosFiltrados = dadosCompletos.filter(item => {
+        return item.descricao.toLowerCase().startsWith(termoDeBusca);
+    });
+
+    renderObrigacoes(resultadosFiltrados);
 }
 
 // Initialize
 document.addEventListener("DOMContentLoaded", function () {
   lucide.createIcons();
-
-  // Update summary and render tabs
-  updateSummary();
-  renderBens();
-  renderDireitos();
-  renderObrigacoes();
 
   // Mobile menu toggle
   const mobileMenuBtn = document.getElementById("mobileMenuBtn");
