@@ -1,141 +1,166 @@
 *{
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 :root{
     --primary: hsl(215, 84%, 15%);
-    --gradient-hero: linear-gradient(135deg, hsl(215, 84%, 15%), hsl(215, 84%, 35%));
+    --primary-light: hsl(215, 84%, 35%);
+    --gradient-hero: linear-gradient(135deg, var(--primary), var(--primary-light));
+    --radius: 10px;
 }
 
+/* CENTRALIZA TUDO NA TELA */
 body{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background: #f2f4f7;
 }
 
 .container{
-    background-color: azure;
-    height: 500px;
-    width: 1000px;
-    border-radius: var(--radius);
-    display: flex;
-}
+    background-color: white;
+    width: 100%;
+    max-width: 420px;
+    padding: 35px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
 
-.BemVindo-section{
-    padding: 50px 50px;
-    background: var(--gradient-hero);
-    background-color: var(--primary);
-    width: 50%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    background-image: url(../img/fundo-login.png);
+    gap: 10px;
 }
 
-.BemVindo-image, img{
-    width: 200px;
-    height: 200px;
-}
-
-.BemVindo-title{
-    width: 100%;
-    text-align: center;
-    color: white;
-    margin-bottom: 15px;
-}
-
-.BemVindo-text{
-    width: 100%;
-    text-align: center;
-    color: white;
-}
+/* ---- SEÇÃO DE LOGIN ---- */
 
 .login-section{
-    height: 100%;
-    width: 50%;
+    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
-        border: 1px solid;
+    align-items: center;
 }
 
 .login-box{
-    height: 400px;
+    width: 100%;
+    height: auto;
+    padding: 30px 20px;
     border-radius: var(--radius);
-    width: 70%;
-    box-shadow: var(--primary-blue) 0px 3px 8px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 30px;
-}
-
-.login-icon{
-    height: 50px;
-    width: 50px;
-}
-
-.login-form{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.password-container{
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.password-container input{
-    width: 100%;
-    height: 25px;
-    padding: 5px;
-}
-
-.input-email{
-    margin-bottom: 10px;
-    width: 100%;
-    height: 25px;
-    padding: 5px;
-}
-
-.login-form label{
-    margin-bottom: 5px;
-}
-
-.manter-logado{
-    margin: 5px 0;
-}
-
-.login-button{
-    height: 30px;
-    color: white;
-    background: var(--primary-blue);
-    margin-top: 20px;
-    background-color: var(--primary);
-}
-
-.login-button:hover{
-    cursor: pointer;
-}
-
-#keep-logged:hover{
-    cursor: pointer;
-}
-
-.txt-cadastra, .txt-manterLogado{
-    font-size: small;
 }
 
 .login-header{
     display: flex;
-    justify-content: center;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 15px;
+}
+
+.login-icon{
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.login-title{
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.divider{
+    width: 50%;
+    border: none;
+    height: 2px;
+    background-color: var(--primary);
+    margin-bottom: 20px;
+}
+
+/* ---- FORM LOGIN ---- */
+
+.login-form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form label{
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.input-email,
+.password-container input{
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.password-container{
+    position: relative;
+}
+
+.password-toggle{
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    cursor: pointer;
+    font-size: 18px;
+    user-select: none;
+}
+
+/* CHECKBOX */
+
+.manter-logado{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+#keep-logged{
+    cursor: pointer;
+}
+
+.txt-manterLogado{
+    font-size: 14px;
+}
+
+/* LINK CADASTRO */
+
+.txt-cadastra{
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.signup-link{
+    font-weight: bold;
+    text-decoration: none;
+    color: #1a73e8;
+
+}
+
+.signup-link:hover{
+    text-decoration: underline;
+}
+
+/* BOTÃO */
+
+.login-button{
+    width: 100%;
+    padding: 12px;
+    background: #155ec0;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 15px;
+    transition: 0.2s;
+}
+
+.login-button:hover{
+    background: var(--primary-light);
+    cursor: pointer;
 }
