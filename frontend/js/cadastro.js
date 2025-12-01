@@ -1,4 +1,4 @@
-const API_URL_INSERE = 'http://localhost:8081/clientes';
+const API_URL_INSERE = 'http://localhost:8081/cadastro';
 const alertContainer = document.getElementById('custom-alert-container');
 const alertMessage = document.getElementById('alert-message');
 const alertButton = document.getElementById('alert-ok-button');
@@ -11,13 +11,13 @@ async function handleFormSubmit(event) {
     event.preventDefault(); 
 
     const nome = document.getElementById('nome').value;
-    const cpf = parseInt(document.getElementById('cpf').value);
+    const telefone = parseInt(document.getElementById('telefone').value);
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
 
     const novoCliente = {
         nome: nome,
-        cpf: cpf,
+        telefone: telefone,
         email: email,
         senha: senha
     };

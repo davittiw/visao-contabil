@@ -4,12 +4,18 @@
     box-sizing: border-box;
 }
 
+:root{
+    --primary: hsl(215, 84%, 15%);
+    --gradient-hero: linear-gradient(135deg, hsl(215, 84%, 15%), hsl(215, 84%, 35%));
+}
+
 .signup-section{
     height: 100%;
     width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid;
 }
 
 .signup-box{
@@ -67,6 +73,7 @@
     color: white;
     background: var(--primary-blue);
     margin-top: 20px;
+    background-color: var(--primary);
 }
 
 .signup-button:hover{
@@ -97,7 +104,8 @@ body{
 
 .BemVindo-section{
     padding: 50px 50px;
-    background: var(--primary-blue);
+    background: var(--gradient-hero);
+    background-color: var(--primary);
     width: 50%;
     height: 100%;
     display: flex;
