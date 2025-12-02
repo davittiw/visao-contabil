@@ -14,12 +14,6 @@ const conectar = async () => {
     return con;
 }
 
-//const todosClientes = async ()=>{
-//    const con = await conectar();
-//    const [linhas] = await con.query('SELECT * FROM FUNCIONARIO');
-//    return await linhas;
-//}
-
 const insereCliente = async (cliente)=>{
     const con = await conectar()
     const sql = 'INSERT INTO cadastro (email, senha, nome, telefone) VALUES (?, ?, ?, ?);'
@@ -167,14 +161,17 @@ const insereAtivoOuPassivo = async (dados) => {
     return true;
 };
 
-//const atualizaUsuario = async (id,cliente)=>{
-//    const con = await conectar()
-//    const sql = 'UPDATE cliente_node SET nome=?,idade=? WHERE id=?'
-//    const valores=[cliente.nome,cliente.idade,id]
-//    console.log(id)
-//    console.log(cliente.nome)
-//    console.log(cliente.idade)
-//    await con.query(sql,valores)
-//}
+const excluirAtivoOuPassivo = async (idGasto, idUsuario) =>{
+    const con = await conectar();
+    
+    const sql = `
+        DELETE FROM entd_psv_atv
+        WHERE gasto_id = ?
+          AND usuario_id = ?;
+    `;
 
-module.exports = {insereCliente, buscaUsuarioPorEmail, getDadosCompletosPatrimonio, insereAtivoOuPassivo}
+    const [resultado] = await con.query(sql, [idGasto, idUsuario]);
+    return resultado.affectedRows;
+}
+
+module.exports = {insereCliente, buscaUsuarioPorEmail, getDadosCompletosPatrimonio, insereAtivoOuPassivo, excluirAtivoOuPassivo}

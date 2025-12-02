@@ -7,7 +7,7 @@ let clientes = [];
 app.use(cors());
 app.use(express.json());
 
-app.get('/', async function(req, res){
+/*app.get('/', async function(req, res){
     try {
         clientes = await db.todosClientes(); 
         res.status(200).json(clientes);
@@ -15,7 +15,7 @@ app.get('/', async function(req, res){
         console.error("Erro ao buscar clientes:", error);
         res.status(500).json({ error: "Erro interno do servidor." });
     }
-});
+});*/
 
 app.post('/cadastro', async function(req, res){
     const novoCliente = req.body; 
@@ -119,6 +119,30 @@ app.post('/transacao', async (req, res) => {
     }
 });
 
+app.delete('/apagar', async (req, res) => {
+    const idGasto = req.query.idGasto;
+    const idUsuario = req.query.userId; 
+
+    if (!idGasto || !idUsuario) {
+        return res.status(400).json({ error: "IDs necessários para exclusão." });
+    }
+
+    try {
+        const linhasAfetadas = await db.excluirAtivoOuPassivo(idGasto, idUsuario);
+
+        if (linhasAfetadas === 0) {
+            return res.status(404).json({ message: "Transação não encontrada ou acesso negado." });
+        }
+        
+        res.status(200).json({ message: "Transação excluída com sucesso." });
+
+    } catch (error) {
+        console.error("Erro ao excluir transação:", error);
+        res.status(500).json({ error: "Erro interno do servidor." });
+    }
+});
+
 app.listen(8081, () => {
     console.log('Servidor rodando na porta 8081');
 });
+

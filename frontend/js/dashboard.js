@@ -26,80 +26,6 @@ async function BuscarDados() {
 
 BuscarDados();
 
-/*
-const mockData = {
-  bens: [
-    {
-      id: 1,
-      nome: "Servidor Dell PowerEdge",
-      categoria: "Equipamento TI",
-      valor: 15000,
-      status: "Ativo",
-    },
-    {
-      id: 2,
-      nome: "Veículo Ford Transit",
-      categoria: "Veículo",
-      valor: 85000,
-      status: "Ativo",
-    },
-    {
-      id: 3,
-      nome: "Máquina de Produção XY",
-      categoria: "Equipamento Industrial",
-      valor: 120000,
-      status: "Manutenção",
-    },
-  ],
-  direitos: [
-    {
-      id: 1,
-      descricao: "Conta a Receber - Cliente ABC",
-      valor: 25000,
-      vencimento: "2024-03-15",
-      status: "Pendente",
-    },
-    {
-      id: 2,
-      descricao: "Direitos Autorais Software",
-      valor: 50000,
-      vencimento: "2025-12-31",
-      status: "Ativo",
-    },
-    {
-      id: 3,
-      descricao: "Contrato de Licenciamento",
-      valor: 30000,
-      vencimento: "2024-06-30",
-      status: "Ativo",
-    },
-  ],
-  obrigacoes: [
-    {
-      id: 1,
-      descricao: "Financiamento Equipamentos",
-      valor: 180000,
-      vencimento: "2024-04-20",
-      status: "Pendente",
-    },
-    {
-      id: 2,
-      descricao: "Obrigação Fiscal IRPJ",
-      valor: 45000,
-      vencimento: "2024-03-31",
-      status: "Vencido",
-    },
-    {
-      id: 3,
-      descricao: "Empréstimo Bancário",
-      valor: 250000,
-      vencimento: "2025-01-15",
-      status: "Ativo",
-    },
-  ],
-};
-*/
-
 // Format currency
 function formatCurrency(value) {
   return `R$ ${value.toLocaleString("pt-BR")}`;
@@ -157,11 +83,15 @@ function updateSummary() {
 
 // Render bens
 function renderBens(dadosCompletos) {
-  const grid = document.getElementById("bensGrid");
-  grid.innerHTML = dadosCompletos
-    .map(
-      (bem) => `
-        <div class="item-card">
+    const grid = document.getElementById("bensGrid");
+
+    grid.innerHTML = ''; 
+
+    dadosCompletos.forEach(bem => {
+        const itemCard = document.createElement('div');
+        itemCard.className = 'item-card';
+
+        itemCard.innerHTML = `
             <div class="item-content">
                 <div class="item-info">
                     <h3>${bem.nome}</h3>
@@ -175,78 +105,103 @@ function renderBens(dadosCompletos) {
                     ${bem.status}
                   </span>
 
-                  <span class="material-icons delete-icon">delete</span>
+                  <span id="lixo" class="material-icons delete-icon" data-id="${bem.id}">delete</span>
                 <div/>
             </div>
-        </div>
-    `
-    )
-    .join("");
+        `;
+        
+        const deleteIcon = itemCard.querySelector('.delete-icon');
+        if (deleteIcon) {
+            deleteIcon.addEventListener('click', async () => {
+                excluirRegistro(bem.id); 
+            });
+        }
+
+        grid.appendChild(itemCard);
+    });
 }
 
 // Render direitos
 function renderDireitos(dadosCompletos) {
   const grid = document.getElementById("direitosGrid");
-  grid.innerHTML = dadosCompletos
-    .map((direito) => {
-      const dataVencimento = new Date(direito.vencimento + "T00:00:00"); // Garante que a data seja interpretada como local
-      return `
-        <div class="item-card">
-            <div class="item-content">
-                <div class="item-info">
-                    <h3>${direito.descricao}</h3>                 
-                    <p>Vencimento: ${dataVencimento.toLocaleDateString(
-                      "pt-BR"
-                    )}</p>
-                    <div class="item-value success">${formatCurrency(
-                      direito.valor
-                    )}</div>
-                </div>
-                <div class="item-ser">
-                  <span class="badge ${getBadgeClass(direito.status)}">
-                    ${direito.status}
-                  </span>
+  
+  grid.innerHTML = ''; 
 
-                  <span class="material-icons delete-icon">delete</span>
-                <div/>
-            </div>
-        </div>
-    `;
-    })
-    .join("");
+  dadosCompletos.forEach(direito =>{
+      const itemCard = document.createElement('div');
+      itemCard.className = 'item-card';
+      const dataVencimento = new Date(direito.vencimento + "T00:00:00");
+
+      itemCard.innerHTML = `<div class="item-content">
+                                <div class="item-info">
+                                    <h3>${direito.descricao}</h3>                 
+                                    <p>Vencimento: ${dataVencimento.toLocaleDateString(
+                                      "pt-BR"
+                                    )}</p>
+                                    <div class="item-value success">${formatCurrency(
+                                      direito.valor
+                                    )}</div>
+                                </div>
+                                <div class="item-ser">
+                                  <span class="badge ${getBadgeClass(direito.status)}">
+                                    ${direito.status}
+                                  </span>
+
+                                  <span class="material-icons delete-icon" data-id="${direito.id}">delete</span>
+                                <div/>
+                            </div>`
+
+      const deleteIcon = itemCard.querySelector('.delete-icon');
+      if (deleteIcon) {
+          deleteIcon.addEventListener('click', async () => {
+              excluirRegistro(direito.id); 
+          });
+      }
+
+      grid.appendChild(itemCard);
+  })
 }
 
 // Render obrigações
 function renderObrigacoes(dadosCompletos) {
   const grid = document.getElementById("obrigacoesGrid");
-  grid.innerHTML = dadosCompletos
-    .map((obrigacao) => {
-      const dataVencimento = new Date(obrigacao.vencimento + "T00:00:00"); // Garante que a data seja interpretada como local
-      return `
-        <div class="item-card">
-            <div class="item-content">
-                <div class="item-info">
-                    <h3>${obrigacao.descricao}</h3>
-                    <p>Vencimento: ${dataVencimento.toLocaleDateString(
-                      "pt-BR"
-                    )}</p>
-                    <div class="item-value danger">${formatCurrency(
-                      obrigacao.valor
-                    )}</div>
 
-                </div>
-                <div class="item-ser">
-                  <span class="badge ${getBadgeClass(obrigacao.status)}">
-                    ${obrigacao.status}
-                  </span>
+  grid.innerHTML = ''; 
 
-                  <span class="material-icons delete-icon">delete</span>
-                <div/>
-            </div>
-        </div>
-    `;
-    })
-    .join("");
+  dadosCompletos.forEach(obrigacao =>{
+    const itemCard = document.createElement('div');
+    itemCard.className = 'item-card';
+    const dataVencimento = new Date(obrigacao.vencimento + "T00:00:00");
+
+    itemCard.innerHTML = `<div class="item-content">
+                              <div class="item-info">
+                                  <h3>${obrigacao.descricao}</h3>
+                                  <p>Vencimento: ${dataVencimento.toLocaleDateString(
+                                    "pt-BR"
+                                  )}</p>
+                                  <div class="item-value danger">${formatCurrency(
+                                    obrigacao.valor
+                                  )}</div>
+
+                              </div>
+                              <div class="item-ser">
+                                <span class="badge ${getBadgeClass(obrigacao.status)}">
+                                  ${obrigacao.status}
+                                </span>
+
+                                <span class="material-icons delete-icon" data-id="${obrigacao.id}">delete</span>
+                              <div/>
+                          </div>`
+
+    const deleteIcon = itemCard.querySelector('.delete-icon');
+    if (deleteIcon) {
+        deleteIcon.addEventListener('click', async () => {
+            excluirRegistro(obrigacao.id); 
+        });
+    }
+
+    grid.appendChild(itemCard);
+  })
 }
 
 let tipoRegistroAtual = "";
@@ -442,6 +397,32 @@ function filtrarErenderizarObrigacoes(termoDeBusca) {
   });
 
   renderObrigacoes(resultadosFiltrados);
+}
+
+async function excluirRegistro(idGasto) {
+
+    let id = parseInt(userId);
+
+    const urlExclusao = `http://localhost:8081/apagar?idGasto=${idGasto}&userId=${id}`;
+
+    try {
+        const response = await fetch(urlExclusao, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            //alert("Registro excluído com sucesso!");
+            //await BuscarDados(); 
+            //await window.location.reload();
+            await BuscarDados();
+        } else {
+            const result = await response.json();
+            alert(`Falha na exclusão: ${result.message || result.error}`);
+        }
+    } catch (error) {
+        console.error("Erro ao tentar excluir registro:", error);
+        alert("Erro de conexão ao excluir. Tente novamente.");
+    }
 }
 
 // Initialize

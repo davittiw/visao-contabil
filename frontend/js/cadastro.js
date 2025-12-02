@@ -11,11 +11,11 @@ async function handleFormSubmit(event) {
     event.preventDefault(); 
 
     const nome = document.getElementById('nome').value;
-    const telefone = parseInt(document.getElementById('telefone').value);
+    const telefone = document.getElementById('telefone').value;
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
 
-    const novoCliente = {
+    let novoCliente = {
         nome: nome,
         telefone: telefone,
         email: email,
@@ -34,11 +34,9 @@ async function handleFormSubmit(event) {
         const result = await response.json();
 
         if (response.ok) {
-            showAlert(`Sucesso! Cliente ${result.cliente.nome} cadastrado.`);
+            alert(`Sucesso! Cliente ${result.cliente.nome} cadastrado.`);
             form.reset();
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 3000);
+            window.location.href = "login.html";
         } 
         else 
         {
